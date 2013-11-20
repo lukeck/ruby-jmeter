@@ -29,7 +29,12 @@ module RubyJmeter
 
     def update_at_xpath(params)
       params[:update_at_xpath].each do |fragment|
-        @doc.at_xpath(fragment[:xpath]) << fragment[:value]
+        element = @doc.at_xpath(fragment[:xpath])
+        if !element.children.empty? && element.children.first.text?
+          element.children.first.content = fragment[:value]
+        else
+          element << fragment[:value]
+        end
       end
     end
 
